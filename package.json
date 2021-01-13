@@ -2,7 +2,7 @@
   "name": "discord-scheduled-role-changer",
   "version": "1.0.0",
   "description": "Discord bot for scheduled role changing.",
-  "main": "index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc",
     "start": "ts-node ./src/index.ts",
