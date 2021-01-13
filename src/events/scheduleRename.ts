@@ -18,35 +18,55 @@ export default function scheduleRename(
     date: Date,
     period?: string,
 ) {
-  let rule: string = '';
+  let rule: object = {
+    second: date.getSeconds(),
+    minute: date.getMinutes(),
+    hour: date.getHours(),
+  };
+
   switch (period) {
     case 'day':
-      rule = `${date.getSeconds()} ${date.getMinutes()} ${date.getHours()} ` +
-             `* * *`; // Once a day
       break;
     case 'month':
-      rule = `${date.getSeconds()} ${date.getMinutes()} ${date.getHours()} ` +
-             `${date.getDate()} * *`; // Once a month
+      rule = {...rule, ...{
+        'date': date.getDate()}}; // Once a month
       break;
     case 'year':
-      rule = `${date.getSeconds()} ${date.getMinutes()} ${date.getHours()} ` +
-             `${date.getDate()} ${date.getMonth() + 1} *`; // Once a month
+      rule = {
+        ...rule,
+        ...{'date': date.getDate(), 'month': date.getMonth()},
+      }; // Once a year
       break;
     default:
-      // ToDo - once
+      rule = {
+        ...rule,
+        ...{
+          'date': date.getDate(),
+          'month': date.getMonth(),
+          'fullYear': date.getFullYear(),
+        },
+      }; // Once
   }
 
-  scheduleJob(rule, function(savedMessage: Message) {
+  const job = scheduleJob(rule, function(savedMessage: Message) {
     const role = savedMessage.guild?.roles.cache.find(
         (role) => role.name === roleOriginalName,
     );
 
-    try {
-      role?.edit({name: roleNewName});
-      savedMessage.channel.send(`Renamed role \`${roleOriginalName}\` to ` +
-                                  `\`${roleNewName}\` successfully! :smile:`);
-    } catch (e) {
-      savedMessage.channel.send(`Something went wrong ://`);
-    }
+    role?.edit({name: roleNewName})
+        .then(() => {
+          savedMessage.channel.send(`Renamed role \`${roleOriginalName}\`` +
+                                    ` to \`${roleNewName}\` successfully! ` +
+                                    `:smile:`);
+        })
+        .catch(() => {
+          savedMessage.channel.send(`Something went wrong! Failed to ` +
+                                    `rename role \`${roleOriginalName}\` ` +
+                                    `to \`${roleNewName}\`. :cry:`);
+        });
   }.bind(null, message));
-};
+
+  if (!job) {
+    throw new Error('Failed scheduling task.');
+  }
+}
