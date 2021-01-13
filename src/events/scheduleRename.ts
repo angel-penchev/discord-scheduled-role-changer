@@ -33,11 +33,20 @@ export default function scheduleRename(
              `${date.getDate()} ${date.getMonth() + 1} *`; // Once a month
       break;
     default:
-      rule = `${date.getSeconds()} ${date.getMinutes()} ${date.getHours()} ` +
-             `${date.getDate()} ${date.getMonth() + 1} ${date.getFullYear}`;
+      // ToDo - once
   }
 
-  scheduleJob(rule, function() {
-    console.log('ToDo: Do sth productive here.');
-  });
+  scheduleJob(rule, function(savedMessage: Message) {
+    const role = savedMessage.guild?.roles.cache.find(
+        (role) => role.name === roleOriginalName,
+    );
+
+    try {
+      role?.edit({name: roleNewName});
+      savedMessage.channel.send(`Renamed role \`${roleOriginalName}\` to ` +
+                                  `\`${roleNewName}\` successfully! :smile:`);
+    } catch (e) {
+      savedMessage.channel.send(`Something went wrong ://`);
+    }
+  }.bind(null, message));
 };
