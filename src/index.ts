@@ -1,5 +1,6 @@
 import {Client} from 'discord.js';
 import config from './config';
+import scheduleRename from './events/scheduleRename';
 
 const client = new Client();
 client.login(config.discordBotToken);
@@ -53,7 +54,13 @@ client.on('message', (message) => {
       return -1;
     }
 
-    // TODO: Implement scheduling here
+    scheduleRename(
+        message,
+        parameters[0],
+        parameters[1],
+        new Date(parameters[2]),
+        parameters[3],
+    );
 
     // Success message
     if (parameters.length === 4) {
