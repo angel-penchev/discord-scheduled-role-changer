@@ -12,6 +12,12 @@ import scheduleRename from '../events/scheduleRename';
 export default function renameHandler(
     message: Message,
 ): Promise<Message> {
+  if (!message.guild?.me?.hasPermission('MANAGE_ROLES')) {
+    return message.channel.send(`Hmmm... I don't seem to have the right to ` +
+                                `manage roles. Are you sure the permissions ` +
+                                `are all set? :thinking:`);
+  }
+
   const parameters = String(message)
       .replace(config.discordCommandPrefix + ' rename ', '')
       .split(/\b(?:to|on|every|once)+\b/i)
@@ -25,6 +31,7 @@ export default function renameHandler(
                                  `<Role1> to <Role2> on <Date> {once | ` +
                                  `every {day, week, year}}\`.`);
   }
+
   // Non-existent role check
   if (!message.guild?.roles.cache.some(
       (role) => role.name === parameters[0],
