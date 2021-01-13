@@ -8,7 +8,8 @@
     "start": "ts-node ./src/index.ts",
     "start:dev": "ts-node-dev --respawn ./src/index.ts",
     "lint": "eslint \"./src/*.{js,ts}\"",
-    "lint:fix": "eslint \"./src/*.{js,ts}\" --fix"
+    "lint:fix": "eslint \"./src/*.{js,ts}\" --fix",
+    "test": "echo 'Error: no test specified'"
   },
   "repository": {
     "type": "git",
