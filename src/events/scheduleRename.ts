@@ -5,11 +5,11 @@ import {scheduleJob} from 'node-schedule';
  * Schedules a role rename.
  *
  * @export
- * @param {Message} message
- * @param {string} roleOriginalName
- * @param {string} roleNewName
- * @param {string} date
- * @param {string} [period]
+ * @param {Message} message - incoming command message
+ * @param {string} roleOriginalName - original server role name
+ * @param {string} roleNewName - new server role name
+ * @param {string} date - at which point should it be changed?
+ * @param {string} [period] - how often should it be changed?
  */
 export default function scheduleRename(
     message: Message,

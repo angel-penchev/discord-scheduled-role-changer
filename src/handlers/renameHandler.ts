@@ -6,8 +6,8 @@ import scheduleRename from '../events/scheduleRename';
  * Handles "!bs rename" command.
  *
  * @export
- * @param {Message} message
- * @return {*}
+ * @param {Message} message - incoming command message
+ * @return {Promise<Message>} - response message
  */
 export default function renameHandler(
     message: Message,
